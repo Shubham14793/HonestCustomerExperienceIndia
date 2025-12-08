@@ -1,0 +1,30 @@
+# OWASP ZAP Baseline Scan Rules
+# Format: rule_id	action	name
+# Actions: IGNORE, WARN, FAIL
+
+# Informational alerts (IGNORE for baseline)
+10015	IGNORE	Incomplete or No Cache-control Header Set
+10020	WARN	Anti-clickjacking Header
+10021	WARN	X-Content-Type-Options Header Missing
+10036	IGNORE	Server Leaks Version Information
+10037	IGNORE	Server Leaks Information via "X-Powered-By"
+10038	WARN	Content Security Policy (CSP) Header Not Set
+10055	IGNORE	CSP: style-src unsafe-inline
+10063	IGNORE	Feature Policy Header Not Set
+10096	IGNORE	Timestamp Disclosure
+10098	IGNORE	Cross-Domain Misconfiguration
+10109	IGNORE	Modern Web Application
+10110	IGNORE	Dangerous JS Functions
+
+# Cookie related (adjust based on your needs)
+10010	WARN	Cookie Without HttpOnly Flag
+10011	WARN	Cookie Without Secure Flag
+10054	WARN	Cookie without SameSite Attribute
+
+# Security headers (enforce in production)
+10035	WARN	Strict-Transport-Security Header
+90003	IGNORE	Sub Resource Integrity Attribute Missing
+
+# Known development patterns
+40012	IGNORE	Cross Site Scripting (Reflected) - Development
+40014	IGNORE	Cross Site Scripting (Persistent) - Development

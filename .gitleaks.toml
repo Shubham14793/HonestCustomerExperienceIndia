@@ -1,0 +1,50 @@
+# Gitleaks Configuration
+# https://github.com/gitleaks/gitleaks
+
+title = "Gitleaks Custom Rules for HonestCustomerExperience"
+
+[allowlist]
+  description = "Allowlisted files and patterns"
+  paths = [
+    '''\.github/workflows/.*\.yml$''',
+    '''package-lock\.json$''',
+    '''\.md$''',
+    '''\.test\.(ts|tsx)$''',
+    '''__tests__/.*''',
+    '''coverage/.*''',
+  ]
+  regexes = [
+    '''test-secret-key''',
+    '''your-secret-key-change-in-production''',
+    '''example\.com''',
+    '''localhost''',
+  ]
+
+[[rules]]
+  id = "jwt-secret-env"
+  description = "JWT Secret in environment file"
+  regex = '''JWT_SECRET\s*=\s*['"]?([^'"}\s]{20,})['"]?'''
+  secretGroup = 1
+  entropy = 3.5
+  path = '''\.env(?!\.example).*'''
+
+[[rules]]
+  id = "private-key"
+  description = "Private Key"
+  regex = '''-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'''
+
+[[rules]]
+  id = "aws-access-key"
+  description = "AWS Access Key ID"
+  regex = '''(?:A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}'''
+
+[[rules]]
+  id = "github-token"
+  description = "GitHub Personal Access Token"
+  regex = '''ghp_[a-zA-Z0-9]{36}'''
+
+[[rules]]
+  id = "vercel-token"
+  description = "Vercel Access Token"
+  regex = '''(?i)vercel[_-]?token.*['\"]([a-zA-Z0-9]{24})['\"]'''
+  secretGroup = 1
