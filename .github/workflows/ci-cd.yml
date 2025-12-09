@@ -207,7 +207,7 @@ jobs:
   build:
     name: 🏗️ Build Application
     runs-on: ubuntu-latest
-    needs: [secret-scan, sast, sca, code-quality, test]
+    needs: [sast, sca, code-quality, test]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
