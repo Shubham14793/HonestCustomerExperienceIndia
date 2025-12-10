@@ -231,7 +231,7 @@ jobs:
 
           # Install dependencies only when needed
           FROM base AS deps
-          RUN apk add --no-cache libc6-compat
+          RUN apk add --no-cache libc6-compat=1.2.4-r2
           WORKDIR /app
           COPY package.json package-lock.json ./
           RUN npm ci
@@ -241,7 +241,7 @@ jobs:
           WORKDIR /app
           COPY --from=deps /app/node_modules ./node_modules
           COPY . .
-          RUN mkdir -p public
+          RUN mkdir -p public .next/standalone .next/static
           ENV NEXT_TELEMETRY_DISABLED 1
           RUN npm run build
 
@@ -251,8 +251,8 @@ jobs:
           ENV NODE_ENV production
           ENV NEXT_TELEMETRY_DISABLED 1
 
-          RUN addgroup --system --gid 1001 nodejs
-          RUN adduser --system --uid 1001 nextjs
+          RUN addgroup --system --gid 1001 nodejs \
+            && adduser --system --uid 1001 nextjs
 
           COPY --from=builder /app/public ./public
           COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
@@ -287,7 +287,7 @@ jobs:
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
-          failure-threshold: warning
+          failure-threshold: error
 
   # ============================================
   # 7. INFRASTRUCTURE AS CODE SECURITY
