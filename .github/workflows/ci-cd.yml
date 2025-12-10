@@ -23,6 +23,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set lowercase image name
+        id: image
+        env:
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+        run: |
+          IMAGE="${IMAGE_NAME,,}"
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
         with:
           fetch-depth: 0
 
@@ -293,12 +301,12 @@ jobs:
           EOF
 
       - name: Build Docker Image
-        run: docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
+        run: docker build -t ${{ steps.image.outputs.image }}:${{ github.sha }} .
 
       - name: Trivy Container Scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          image-ref: ${{ steps.image.outputs.image }}:${{ github.sha }}
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
