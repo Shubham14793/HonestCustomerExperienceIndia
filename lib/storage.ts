@@ -1,7 +1,13 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+// Use a writable directory when running in serverless (e.g., Vercel) where the repo path is read-only.
+// Allow override via DATA_DIR env for flexibility; default to /tmp on Vercel, repo-local otherwise.
+const DATA_DIR = process.env.DATA_DIR
+  ? process.env.DATA_DIR
+  : process.env.VERCEL
+    ? '/tmp/hcei-data'
+    : path.join(process.cwd(), 'data');
 
 /**
  * Generic JSON file handler for data persistence
