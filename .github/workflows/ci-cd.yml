@@ -301,7 +301,6 @@ jobs:
       DOCKERHUB_REPO: ${{ github.repository }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_HCEI }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME || github.repository_owner }}
-    if: ${{ env.DOCKERHUB_TOKEN != '' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
