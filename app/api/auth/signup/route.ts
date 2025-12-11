@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { storage } from '@/lib/storage';
 import { hashPassword, generateToken, generateId, isValidEmail, isValidPhone } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
   try {
@@ -59,6 +60,8 @@ export async function POST(request: NextRequest) {
     // Generate token
     const token = generateToken({ userId: user.id, email: user.email });
 
+    logger.info('signup success', { userId: user.id, email: user.email });
+
     return NextResponse.json({
       success: true,
       token,
@@ -70,7 +73,7 @@ export async function POST(request: NextRequest) {
       },
     }, { status: 201 });
   } catch (error) {
-    console.error('Signup error:', error);
+    logger.error('signup error', { error: (error as Error).message, stack: (error as Error).stack });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
