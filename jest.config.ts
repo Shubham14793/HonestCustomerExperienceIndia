@@ -41,6 +41,7 @@ const config: Config = {
     '**/__tests__/**/*.[jt]s?(x)',
     '**/?(*.)+(spec|test).[jt]s?(x)',
   ],
+  modulePathIgnorePatterns: ['<rootDir>/.next/'],
   // CI/CD reporters
   reporters: [
     'default',
