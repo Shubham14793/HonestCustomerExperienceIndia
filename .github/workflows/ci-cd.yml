@@ -291,6 +291,43 @@ jobs:
           failure-threshold: error
 
   # ============================================
+  # 7. PUSH IMAGE TO DOCKER HUB
+  # ============================================
+  push-image:
+    name: 📦 Push Image to Docker Hub
+    runs-on: ubuntu-latest
+    needs: container-scan
+    if: ${{ secrets.DOCKERHUB_HCEI != '' }}
+    env:
+      DOCKERHUB_REPO: ${{ github.repository }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set lowercase image name
+        id: image
+        env:
+          IMAGE_NAME: ${{ env.DOCKERHUB_REPO }}
+        run: |
+          IMAGE="${IMAGE_NAME,,}"
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_HCEI }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME || github.repository_owner }}" --password-stdin
+
+      - name: Build Docker image for Docker Hub
+        run: |
+          IMAGE="${{ steps.image.outputs.image }}"
+          docker build -t "$IMAGE:${{ github.sha }}" .
+          docker tag "$IMAGE:${{ github.sha }}" "$IMAGE:latest"
+
+      - name: Push image to Docker Hub
+        run: |
+          IMAGE="${{ steps.image.outputs.image }}"
+          docker push "$IMAGE:${{ github.sha }}"
+          docker push "$IMAGE:latest"
+
+  # ============================================
   # 7. INFRASTRUCTURE AS CODE SECURITY
   # ============================================
   iac-scan:
