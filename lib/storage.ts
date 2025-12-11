@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import { logger } from './logger';
 
 // Use a writable directory when running in serverless (e.g., Vercel) where the repo path is read-only.
 // Allow override via DATA_DIR env for flexibility; default to /tmp on Vercel, repo-local otherwise.
@@ -24,11 +25,15 @@ export class JsonStorage<T> {
    */
   async readAll(): Promise<T[]> {
     try {
+      await fs.mkdir(path.dirname(this.filePath), { recursive: true });
       await fs.access(this.filePath);
       const data = await fs.readFile(this.filePath, 'utf-8');
       return JSON.parse(data);
     } catch (error) {
-      // File doesn't exist, return empty array
+      logger.warn('storage.readAll fallback to empty array', {
+        filePath: this.filePath,
+        error: (error as Error).message,
+      });
       return [];
     }
   }

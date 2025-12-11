@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { storage } from '@/lib/storage';
 import { comparePassword, generateToken } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,6 +37,8 @@ export async function POST(request: NextRequest) {
     // Generate token
     const token = generateToken({ userId: user.id, email: user.email });
 
+    logger.info('login success', { userId: user.id, email: user.email });
+
     return NextResponse.json({
       success: true,
       token,
@@ -47,7 +50,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Login error:', error);
+    logger.error('login error', { error: (error as Error).message, stack: (error as Error).stack });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
