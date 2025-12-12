@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="3" failures="0" errors="0" time="1.579">
-  <testsuite name="logger" errors="0" failures="0" skipped="0" timestamp="2025-12-11T15:28:37" time="0.492" tests="3">
-    <testcase classname="logger" name="logs info level with console.log and structured payload" time="0.005">
+<testsuites name="jest tests" tests="12" failures="0" errors="0" time="2.232">
+  <testsuite name="JsonStorage" errors="0" failures="0" skipped="0" timestamp="2025-12-12T04:59:36" time="0.82" tests="12">
+    <testcase classname="JsonStorage readAll" name="should read all data from JSON file" time="0.007">
     </testcase>
-    <testcase classname="logger" name="logs warn level with console.warn and structured payload" time="0.002">
+    <testcase classname="JsonStorage readAll" name="should return empty array when file does not exist" time="0.034">
     </testcase>
-    <testcase classname="logger" name="logs error level with console.error and includes meta" time="0.002">
+    <testcase classname="JsonStorage writeAll" name="should write data to JSON file" time="0.002">
+    </testcase>
+    <testcase classname="JsonStorage findOne" name="should find item matching predicate" time="0.003">
+    </testcase>
+    <testcase classname="JsonStorage findOne" name="should return undefined when no item matches" time="0.001">
+    </testcase>
+    <testcase classname="JsonStorage findMany" name="should find all items matching predicate" time="0.001">
+    </testcase>
+    <testcase classname="JsonStorage findMany" name="should return empty array when no items match" time="0.001">
+    </testcase>
+    <testcase classname="JsonStorage create" name="should add new item and save to file" time="0.038">
+    </testcase>
+    <testcase classname="JsonStorage update" name="should update item matching predicate" time="0.007">
+    </testcase>
+    <testcase classname="JsonStorage update" name="should return null when no item matches" time="0.002">
+    </testcase>
+    <testcase classname="JsonStorage delete" name="should delete item matching predicate" time="0.003">
+    </testcase>
+    <testcase classname="JsonStorage delete" name="should return false when no item matches" time="0.008">
     </testcase>
   </testsuite>
 </testsuites>
