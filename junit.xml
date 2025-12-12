@@ -1,29 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="12" failures="0" errors="0" time="2.232">
-  <testsuite name="JsonStorage" errors="0" failures="0" skipped="0" timestamp="2025-12-12T04:59:36" time="0.82" tests="12">
-    <testcase classname="JsonStorage readAll" name="should read all data from JSON file" time="0.007">
+<testsuites name="jest tests" tests="46" failures="0" errors="0" time="12.241">
+  <testsuite name="SignupPage" errors="0" failures="0" skipped="0" timestamp="2025-12-12T08:48:24" time="2.922" tests="5">
+    <testcase classname="SignupPage" name="should render signup form" time="0.127">
     </testcase>
-    <testcase classname="JsonStorage readAll" name="should return empty array when file does not exist" time="0.034">
+    <testcase classname="SignupPage" name="should handle successful signup" time="0.27">
     </testcase>
-    <testcase classname="JsonStorage writeAll" name="should write data to JSON file" time="0.002">
+    <testcase classname="SignupPage" name="should show error when passwords do not match" time="0.069">
     </testcase>
-    <testcase classname="JsonStorage findOne" name="should find item matching predicate" time="0.003">
+    <testcase classname="SignupPage" name="should display error message on failed signup" time="0.075">
+    </testcase>
+    <testcase classname="SignupPage" name="should have link to login page" time="0.025">
+    </testcase>
+  </testsuite>
+  <testsuite name="Utils - Authentication" errors="0" failures="0" skipped="0" timestamp="2025-12-12T08:48:27" time="2.098" tests="17">
+    <testcase classname="Utils - Authentication hashPassword" name="should hash a password" time="0.171">
+    </testcase>
+    <testcase classname="Utils - Authentication hashPassword" name="should generate different hashes for the same password" time="0.306">
+    </testcase>
+    <testcase classname="Utils - Authentication comparePassword" name="should return true for matching password and hash" time="0.323">
+    </testcase>
+    <testcase classname="Utils - Authentication comparePassword" name="should return false for non-matching password and hash" time="0.308">
+    </testcase>
+    <testcase classname="Utils - Authentication generateToken" name="should generate a JWT token" time="0.008">
+    </testcase>
+    <testcase classname="Utils - Authentication generateToken" name="should generate different tokens for different payloads" time="0.005">
+    </testcase>
+    <testcase classname="Utils - Authentication verifyToken" name="should verify and decode a valid token" time="0.006">
+    </testcase>
+    <testcase classname="Utils - Authentication verifyToken" name="should return null for invalid token" time="0.004">
+    </testcase>
+    <testcase classname="Utils - Authentication verifyToken" name="should return null for empty token" time="0.006">
+    </testcase>
+    <testcase classname="Utils - ID Generation generateId" name="should generate a unique ID" time="0.001">
+    </testcase>
+    <testcase classname="Utils - ID Generation generateId" name="should generate different IDs on consecutive calls" time="0.001">
+    </testcase>
+    <testcase classname="Utils - ID Generation generateId" name="should generate ID with timestamp and random string" time="0.001">
+    </testcase>
+    <testcase classname="Utils - Validation isValidEmail" name="should return true for valid email addresses" time="0.001">
+    </testcase>
+    <testcase classname="Utils - Validation isValidEmail" name="should return false for invalid email addresses" time="0.001">
+    </testcase>
+    <testcase classname="Utils - Validation isValidPhone" name="should return true for valid phone numbers" time="0.013">
+    </testcase>
+    <testcase classname="Utils - Validation isValidPhone" name="should return false for invalid phone numbers" time="0.001">
+    </testcase>
+    <testcase classname="Utils - Validation isValidPhone" name="should accept phone numbers with at least 10 digits" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="HomePage" errors="0" failures="0" skipped="0" timestamp="2025-12-12T08:48:29" time="1.558" tests="5">
+    <testcase classname="HomePage" name="should render home page with hero section" time="0.064">
+    </testcase>
+    <testcase classname="HomePage" name="should display YouTube video when featuredVideoId exists" time="0.084">
+    </testcase>
+    <testcase classname="HomePage" name="should render navigation links" time="0.023">
+    </testcase>
+    <testcase classname="HomePage" name="should render feature cards" time="0.029">
+    </testcase>
+    <testcase classname="HomePage" name="should render benefits section" time="0.031">
+    </testcase>
+  </testsuite>
+  <testsuite name="LoginPage" errors="0" failures="0" skipped="0" timestamp="2025-12-12T08:48:31" time="1.765" tests="4">
+    <testcase classname="LoginPage" name="should render login form" time="0.151">
+    </testcase>
+    <testcase classname="LoginPage" name="should handle successful login" time="0.126">
+    </testcase>
+    <testcase classname="LoginPage" name="should display error message on failed login" time="0.127">
+    </testcase>
+    <testcase classname="LoginPage" name="should have link to signup page" time="0.035">
+    </testcase>
+  </testsuite>
+  <testsuite name="JsonStorage" errors="0" failures="0" skipped="0" timestamp="2025-12-12T08:48:33" time="1.063" tests="12">
+    <testcase classname="JsonStorage readAll" name="should read all data from JSON file" time="0.011">
+    </testcase>
+    <testcase classname="JsonStorage readAll" name="should return empty array when file does not exist" time="0.004">
+    </testcase>
+    <testcase classname="JsonStorage writeAll" name="should write data to JSON file" time="0.004">
+    </testcase>
+    <testcase classname="JsonStorage findOne" name="should find item matching predicate" time="0.014">
     </testcase>
     <testcase classname="JsonStorage findOne" name="should return undefined when no item matches" time="0.001">
     </testcase>
-    <testcase classname="JsonStorage findMany" name="should find all items matching predicate" time="0.001">
+    <testcase classname="JsonStorage findMany" name="should find all items matching predicate" time="0.002">
     </testcase>
-    <testcase classname="JsonStorage findMany" name="should return empty array when no items match" time="0.001">
+    <testcase classname="JsonStorage findMany" name="should return empty array when no items match" time="0.002">
     </testcase>
-    <testcase classname="JsonStorage create" name="should add new item and save to file" time="0.038">
+    <testcase classname="JsonStorage create" name="should add new item and save to file" time="0.002">
     </testcase>
-    <testcase classname="JsonStorage update" name="should update item matching predicate" time="0.007">
+    <testcase classname="JsonStorage update" name="should update item matching predicate" time="0.013">
     </testcase>
     <testcase classname="JsonStorage update" name="should return null when no item matches" time="0.002">
     </testcase>
-    <testcase classname="JsonStorage delete" name="should delete item matching predicate" time="0.003">
+    <testcase classname="JsonStorage delete" name="should delete item matching predicate" time="0.007">
     </testcase>
-    <testcase classname="JsonStorage delete" name="should return false when no item matches" time="0.008">
+    <testcase classname="JsonStorage delete" name="should return false when no item matches" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="logger" errors="0" failures="0" skipped="0" timestamp="2025-12-12T08:48:34" time="1.077" tests="3">
+    <testcase classname="logger" name="logs info level with console.log and structured payload" time="0.007">
+    </testcase>
+    <testcase classname="logger" name="logs warn level with console.warn and structured payload" time="0.012">
+    </testcase>
+    <testcase classname="logger" name="logs error level with console.error and includes meta" time="0.003">
     </testcase>
   </testsuite>
 </testsuites>

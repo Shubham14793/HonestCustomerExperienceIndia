@@ -77,6 +77,7 @@ export interface Admin {
 
 // YouTube channel configuration
 export interface YouTubeConfig {
+  id: string;
   channelUrl: string;
   featuredVideoId: string; // YouTube video ID
   lastUpdated: string;
