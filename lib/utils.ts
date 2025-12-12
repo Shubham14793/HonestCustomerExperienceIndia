@@ -58,3 +58,46 @@ export function isValidPhone(phone: string): boolean {
   const phoneRegex = /^[+]?[\d\s-()]+$/;
   return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
 }
+
+/**
+ * Best-effort conversion of a DB field into a string array.
+ * Handles: string[], JSON stringified arrays, comma-separated strings, Postgres array strings.
+ */
+export function toStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.filter((v): v is string => typeof v === 'string');
+  }
+
+  if (typeof value !== 'string') return [];
+
+  const trimmed = value.trim();
+  if (!trimmed) return [];
+
+  // Postgres array literal: {a,b,c}
+  if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+    const inner = trimmed.slice(1, -1).trim();
+    if (!inner) return [];
+    return inner
+      .split(',')
+      .map(s => s.trim().replace(/^\"|\"$/g, ''))
+      .filter(Boolean);
+  }
+
+  // JSON array string
+  if (trimmed.startsWith('[')) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) {
+        return parsed.filter((v): v is string => typeof v === 'string');
+      }
+    } catch {
+      // fall through
+    }
+  }
+
+  // Fallback: comma-separated
+  return trimmed
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+}

@@ -35,6 +35,33 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
   const [loading, setLoading] = useState(true);
   const [id, setId] = useState<string>('');
 
+  const normalizeLossTypes = (value: unknown): string[] => {
+    if (Array.isArray(value)) return value.filter((v): v is string => typeof v === 'string');
+    if (typeof value !== 'string') return [];
+    const trimmed = value.trim();
+    if (!trimmed) return [];
+    if (trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) return parsed.filter((v): v is string => typeof v === 'string');
+      } catch {
+        // ignore
+      }
+    }
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+      const inner = trimmed.slice(1, -1).trim();
+      if (!inner) return [];
+      return inner
+        .split(',')
+        .map(s => s.trim().replace(/^\"|\"$/g, ''))
+        .filter(Boolean);
+    }
+    return trimmed
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+  };
+
   useEffect(() => {
     params.then(p => setId(p.id));
   }, [params]);
@@ -56,7 +83,10 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
       .then(res => res.json())
       .then(data => {
         if (data.case) {
-          setCaseData(data.case);
+          setCaseData({
+            ...data.case,
+            lossTypes: normalizeLossTypes(data.case.lossTypes),
+          });
           setUpdates(data.updates || []);
         }
         setLoading(false);

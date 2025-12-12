@@ -6,6 +6,7 @@ import {
   generateId,
   isValidEmail,
   isValidPhone,
+  toStringArray,
 } from '@/lib/utils';
 
 describe('Utils - Authentication', () => {
@@ -150,5 +151,32 @@ describe('Utils - Validation', () => {
       expect(isValidPhone('1234567890')).toBe(true);
       expect(isValidPhone('12345678901')).toBe(true);
     });
+  });
+});
+
+describe('Utils - toStringArray', () => {
+  it('returns an empty array for non-strings/non-arrays', () => {
+    expect(toStringArray(undefined)).toEqual([]);
+    expect(toStringArray(null)).toEqual([]);
+    expect(toStringArray(123)).toEqual([]);
+    expect(toStringArray({})).toEqual([]);
+  });
+
+  it('returns a string[] when given a string[]', () => {
+    expect(toStringArray(['a', 'b'])).toEqual(['a', 'b']);
+    expect(toStringArray(['a', 1, 'b'] as any)).toEqual(['a', 'b']);
+  });
+
+  it('parses JSON array strings', () => {
+    expect(toStringArray('["a","b"]')).toEqual(['a', 'b']);
+  });
+
+  it('parses Postgres array literals', () => {
+    expect(toStringArray('{a,b,c}')).toEqual(['a', 'b', 'c']);
+    expect(toStringArray('{"a","b"}')).toEqual(['a', 'b']);
+  });
+
+  it('falls back to comma-separated strings', () => {
+    expect(toStringArray('a,b, c')).toEqual(['a', 'b', 'c']);
   });
 });

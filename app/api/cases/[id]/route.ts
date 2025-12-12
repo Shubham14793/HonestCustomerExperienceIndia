@@ -1,6 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { storage } from '@/lib/storage';
-import { verifyToken } from '@/lib/utils';
+import { toStringArray, verifyToken } from '@/lib/utils';
+
+function normalizeCase(caseData: any) {
+  return {
+    ...caseData,
+    lossTypes: toStringArray(caseData?.lossTypes),
+    evidenceFiles: caseData?.evidenceFiles ? toStringArray(caseData.evidenceFiles) : undefined,
+    monetaryLoss:
+      caseData?.monetaryLoss === null || caseData?.monetaryLoss === undefined
+        ? undefined
+        : typeof caseData.monetaryLoss === 'number'
+          ? caseData.monetaryLoss
+          : Number(caseData.monetaryLoss),
+  };
+}
 
 export async function GET(
   request: NextRequest,
@@ -49,7 +63,7 @@ export async function GET(
     const updates = await storage.updates.findMany(u => u.caseId === id);
 
     return NextResponse.json({
-      case: caseData,
+      case: normalizeCase(caseData),
       updates: updates.sort((a, b) => 
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       ),
