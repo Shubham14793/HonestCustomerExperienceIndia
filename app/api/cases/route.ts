@@ -1,7 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { storage } from '@/lib/storage';
-import { verifyToken, generateId } from '@/lib/utils';
+import { verifyToken, generateId, toStringArray } from '@/lib/utils';
 import { CaseStatus, LossType } from '@/lib/types';
+
+function normalizeCase(caseData: any) {
+  return {
+    ...caseData,
+    lossTypes: toStringArray(caseData?.lossTypes),
+    evidenceFiles: caseData?.evidenceFiles ? toStringArray(caseData.evidenceFiles) : undefined,
+    monetaryLoss:
+      caseData?.monetaryLoss === null || caseData?.monetaryLoss === undefined
+        ? undefined
+        : typeof caseData.monetaryLoss === 'number'
+          ? caseData.monetaryLoss
+          : Number(caseData.monetaryLoss),
+  };
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -52,6 +66,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Store lossTypes in a format compatible with both JSON and text columns
+    const lossTypesArray = toStringArray(lossTypes);
+    const lossTypesForStorage: any = process.env.SUPABASE_URL ? JSON.stringify(lossTypesArray) : (lossTypesArray as LossType[]);
+
     // Create case
     const caseData = await storage.cases.create({
       id: generateId(),
@@ -61,7 +79,7 @@ export async function POST(request: NextRequest) {
       domain,
       incidentDate,
       description,
-      lossTypes: lossTypes as LossType[],
+      lossTypes: lossTypesForStorage,
       monetaryLoss: monetaryLoss ? parseFloat(monetaryLoss) : undefined,
       contactName,
       contactEmail,
@@ -81,7 +99,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      case: caseData,
+      case: normalizeCase(caseData),
     }, { status: 201 });
   } catch (error) {
     console.error('Case submission error:', error);
@@ -117,7 +135,9 @@ export async function GET(request: NextRequest) {
     const cases = await storage.cases.findMany(c => c.userId === decoded.userId);
 
     return NextResponse.json({
-      cases: cases.sort((a, b) => 
+      cases: cases
+        .map(normalizeCase)
+        .sort((a, b) => 
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       ),
     });
