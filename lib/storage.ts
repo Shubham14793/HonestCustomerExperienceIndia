@@ -101,7 +101,9 @@ export class JsonStorage<T> {
 }
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Prefer service role key for server-side API routes (bypasses RLS safely).
+// Fall back to anon key only if service role is not provided.
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
 const hasSupabase = Boolean(SUPABASE_URL && SUPABASE_KEY);
 
 /**
@@ -118,6 +120,11 @@ class SupabaseStorage<T extends { id: string }> {
   constructor(table: string) {
     if (!SUPABASE_URL || !SUPABASE_KEY) {
       throw new Error('Supabase environment variables are not configured');
+    }
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      logger.warn('SupabaseStorage is using anon key; RLS may block writes. Set SUPABASE_SERVICE_ROLE_KEY for server-side operations.', {
+        table,
+      });
     }
     this.table = table;
     this.baseUrl = `${SUPABASE_URL}/rest/v1/${table}`;
